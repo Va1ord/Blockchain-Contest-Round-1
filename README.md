@@ -23,3 +23,123 @@ an archive containing the following:
 
 So, I would like to suggest using Dijkstra's (Дейкстры) algorithm https://ru.wikipedia.org/wiki/Алгоритм_Дейкстры to optimize the code.
 This is the most optimal algorithm for finding the shortest path in a weighted graph.
+Dijkstra's algorithm:
+
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <limits> // Для infinity
+
+using namespace std;
+
+// Структура для представления ребра графа
+struct Edge {
+    int to;         // Вершина, в которую ведет ребро
+    int weight;     // Вес ребра
+};
+
+// Функция алгоритма Дейкстры
+vector<int> dijkstra(const vector<vector<Edge>>& graph, int start_node) {
+    int num_nodes = graph.size();
+
+    // Вектор для хранения расстояний от стартовой вершины до всех остальных
+    vector<int> distances(num_nodes, numeric_limits<int>::max()); // Изначально все расстояния бесконечны
+    distances[start_node] = 0; // Расстояние от стартовой вершины до самой себя равно 0
+
+    // Очередь с приоритетом для хранения вершин, которые нужно посетить (вершины с меньшим расстоянием имеют больший приоритет)
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    pq.push({0, start_node}); // Помещаем стартовую вершину в очередь с приоритетом 0
+
+    while (!pq.empty()) {
+        // Извлекаем вершину с наименьшим расстоянием из очереди
+        int current_distance = pq.top().first;
+        int current_node = pq.top().second;
+        pq.pop();
+
+        // Если расстояние до текущей вершины уже меньше, чем текущее известное расстояние, пропускаем её
+        if (current_distance > distances[current_node]) {
+            continue;
+        }
+
+        // Перебираем все ребра, исходящие из текущей вершины
+        for (const Edge& edge : graph[current_node]) {
+            int neighbor = edge.to;
+            int weight = edge.weight;
+
+            // Если мы нашли более короткий путь до соседней вершины
+            if (distances[neighbor] > distances[current_node] + weight) {
+                distances[neighbor] = distances[current_node] + weight; // Обновляем расстояние
+                pq.push({distances[neighbor], neighbor}); // Помещаем соседнюю вершину в очередь с новым расстоянием
+            }
+        }
+    }
+
+    return distances; // Возвращаем вектор с расстояниями от стартовой вершины до всех остальных
+}
+
+int main() {
+    // Пример графа (матрица смежности)
+    // В графе 5 вершин (0, 1, 2, 3, 4)
+    vector<vector<Edge>> graph(5);
+
+    // Добавляем ребра в граф (направленный граф)
+    graph[0].push_back({1, 4});
+    graph[0].push_back({2, 2});
+
+    graph[1].push_back({2, 5});
+    graph[1].push_back({3, 10});
+
+    graph[2].push_back({4, 3});
+
+    graph[3].push_back({4, 11});
+
+    // Запускаем алгоритм Дейкстры, начиная с вершины 0
+    vector<int> distances = dijkstra(graph, 0);
+
+    // Выводим результаты
+    cout << "Расстояния от вершины 0:" << endl;
+    for (int i = 0; i < distances.size(); ++i) {
+        cout << "До вершины " << i << ": ";
+        if (distances[i] == numeric_limits<int>::max()) {
+            cout << "Бесконечность" << endl;
+        } else {
+            cout << distances[i] << endl;
+        }
+    }
+
+    return 0;
+}
+
+1.  Структура Edge:  Определяет структуру ребра, содержащую информацию о вершине, в которую ведет ребро (to) и весе ребра (weight).
+
+2.  Функция dijkstra:
+    *   Принимает граф (представленный как vector<vector<Edge>>) и стартовую вершину (start_node).
+    *   distances: Вектор для хранения кратчайших расстояний от стартовой вершины до каждой вершины графа. Инициализируется значениями "бесконечность" (numeric_limits<int>::max()).  Расстояние от стартовой вершины до себя самой устанавливается равным 0.
+    *   priority_queue:  Очередь с приоритетом (pq) используется для выбора вершины для посещения на каждой итерации.  Вершины с меньшим известным расстоянием имеют более высокий приоритет (извлекаются первыми).  Тип pair<int, int> хранит расстояние и номер вершины.  greater<pair<int, int>> обеспечивает, что вершина с наименьшим расстоянием находится в начале очереди.
+    *   Алгоритм:
+        *   Пока очередь не пуста:
+            *   Извлечь вершину с наименьшим расстоянием (current_node).
+            *   Если известное расстояние до вершины (current_distance) больше, чем текущее значение в distances, это означает, что мы уже нашли более короткий путь, поэтому пропускаем эту вершину.
+            *   Для каждого соседа neighbor текущей вершины:
+                *   Если расстояние до neighbor можно улучшить, обновите distances[neighbor] и добавьте neighbor в очередь.
+    *   Возвращает вектор distances с кратчайшими расстояниями.
+
+3.  Функция main:
+    *   Создает пример графа, используя vector<vector<Edge>>.  Каждый элемент graph[i] - это вектор ребер, исходящих из вершины i.
+    *   Вызывает функцию dijkstra для вычисления кратчайших расстояний.
+    *   Выводит результаты.  Если расстояние до какой-либо вершины равно "бесконечности", это означает, что до этой вершины нет пути из стартовой вершины.
+
+Как использовать код:
+
+1.  Скопируйте код в файл с расширением .cpp (например, dijkstra.cpp).
+2.  Скомпилируйте код с помощью компилятора C++ (например, g++):
+    g++ dijkstra.cpp -o dijkstra
+3. Запустите исполняемый файл:
+       ./dijkstra
+   
+The code outputs the shortest distances from vertex 0 to all other vertices in the graph. You can change the graph in the main function to test the algorithm on other graphs.
+
+Dijkstra's algorithm is a method of finding the shortest paths from one vertex of a graph to all the others.
+How it works: the algorithm builds a route step by step, selecting at each step the vertex with the smallest known distance from the starting vertex and updating the distances to neighboring vertices.
+
+The Dijkstra's algorithm is left to be used in TON Core. 
