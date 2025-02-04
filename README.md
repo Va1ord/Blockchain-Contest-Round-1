@@ -21,6 +21,18 @@ an archive containing the following:
 2. Code of Transaction-checker smart-contract and script for generation messages for that contract with build instructions.
 3. Addresses of smart-contracts deployed in Testnet and Fastnet respectively, with the tx_hash of transactions that demonstrate both successful and unsuccessful checks of blocks and transactions.
 
+git clone --recursive https://github.com/ton-blockchain/ton.git
+cd ton
+git checkout validation-contest
+Your solution will be the contest/solution/contest-solution CMake target.
+The entry point of the solution is run_contest_solution in contest/solution/solution.cpp. It takes:
+1. block_id - id of the block (shard, seqno and hashes).
+2. block_data - serialized block data, but without state update (it is replaced with an empty cell).
+3. collated_data - serialized collated data (Merkle proofs of shard states).
+4. promise - the Promise object to return the result to.
+4a) If the block is valid, the solution should return the serialized Merkle update.
+4b) If the block is invalid, the solution should return any td::Status::Error.
+
 So, I would like to suggest using Dijkstra's (Дейкстры) algorithm https://ru.wikipedia.org/wiki/Алгоритм_Дейкстры to optimize the code.
 This is the most optimal algorithm for finding the shortest path in a weighted graph.
 Dijkstra's algorithm:
