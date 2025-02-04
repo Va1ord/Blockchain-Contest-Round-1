@@ -34,7 +34,7 @@ The entry point of the solution is run_contest_solution in contest/solution/solu
 4b) If the block is invalid, the solution should return any td::Status::Error.
 
 So, I would like to suggest using Dijkstra's (Дейкстры) algorithm https://ru.wikipedia.org/wiki/Алгоритм_Дейкстры to optimize the code.
-This is the most optimal algorithm for finding the shortest path in a weighted graph.
+This is the most optimal algorithm for finding the shortest path in a weighted graph.This algorithm will help optimize TON Core using graph theory.
 Dijkstra's algorithm:
 
 #include <iostream>
