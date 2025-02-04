@@ -21,5 +21,5 @@ an archive containing the following:
 2. Code of Transaction-checker smart-contract and script for generation messages for that contract with build instructions.
 3. Addresses of smart-contracts deployed in Testnet and Fastnet respectively, with the tx_hash of transactions that demonstrate both successful and unsuccessful checks of blocks and transactions.
 
-So, I would like to suggest using Dijkstra's (Дейкстры) algorithm to optimize the code.
+So, I would like to suggest using Dijkstra's (Дейкстры) algorithm https://ru.wikipedia.org/wiki/Алгоритм_Дейкстры to optimize the code.
 This is the most optimal algorithm for finding the shortest path in a weighted graph.
